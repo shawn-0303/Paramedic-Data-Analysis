@@ -1,0 +1,24 @@
+---
+title: "Read Raw Data - HPS"
+format: pdf
+editor: visual
+---
+
+# Load Packages
+
+```{r}
+#| label: packages
+
+library(readxl)
+```
+
+# Load HPS Data - 
+
+```{r}
+#| label: load_CKL_data
+
+raw_HPS <- read_xlsx("/home2/wburr/Shawn_Research/raw_data/HPS-InTox_Data_Pull.xlsx",
+                     col_names = TRUE)
+
+save(file = "/home2/wburr/Shawn_Research/data/raw_data/raw_HPS.rda", raw_HPS)
+```

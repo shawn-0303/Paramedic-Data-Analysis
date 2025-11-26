@@ -1,0 +1,36 @@
+---
+title: "Process and Clean - HPS"
+format: pdf
+editor: visual
+---
+
+# Load Raw Data and Packages
+
+```{r}
+#| label: load
+#| message: false
+
+library(dplyr)
+library(tidyverse)
+
+load("/home2/wburr/Shawn_Research/data/raw_data/raw_HPS.rda")
+```
+
+# Format Date 
+
+```{r}
+#| label: format_date
+
+
+```
+
+
+
+HPS <- 
+
+OpOD_PCCP$Date.Good<- dmy(OpOD_PCCP$Call.Date)
+
+
+load ("./dat/raw/OpOD_PCCP0.rda")
+load ("./dat/Pt_weight.rda")
+
