@@ -59,12 +59,12 @@ prop_HPS_gender_NA <- n_HPS_gender_NA / n_HPS # 0
 #| label: data_missingness
 
 # Identify what data is missing 
-n_missing_age <- length(which(is.na(HPS$Age))) # 0
-n_missing_calldate <- length(which(is.na(HPS$Call_Date))) # 0
-n_missing_calltime <- length(which(is.na(HPS$Call_Time))) # 0
-n_missing_PickUpLocation <- length(which(is.na(HPS$PickupLocationDescription))) # 0
+n_HPS_missing_age <- length(which(is.na(HPS$Age))) # 0
+n_HPS_missing_calldate <- length(which(is.na(HPS$Call_Date))) # 0
+n_HPS_missing_calltime <- length(which(is.na(HPS$Call_Time))) # 0
+n_HPS_missing_PickUpLocation <- length(which(is.na(HPS$PickupLocationDescription))) # 0
 
-# No missing data identified 
+# No missing data identified; No further action
 ```
 
 

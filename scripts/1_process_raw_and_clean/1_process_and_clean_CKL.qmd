@@ -44,36 +44,40 @@ n_CKL <- nrow(CKL)
 n_CKL_F <- length(which(CKL$Gender == "F"))
 n_CKL_M <- length(which(CKL$Gender == "M"))
 n_CKL_X <- length(which(CKL$Gender == "X"))
-n_CKL_NA <- length(which(is.na(CKL$Gender)))
 
 # Calculate proportions
 prop_CKL_F <- n_CKL_F / n_CKL # 0.4339
 prop_CKL_M <- n_CKL_M / n_CKL # 0.5533
-prop_CKL_X <- n_CKL_X / n_CKL # 0.0009
-prop_CKL_NA <- n_CKL_NA / n_CKL # 0.0119
+prop_CKL_X <- n_CKL_X / n_CKL # 0.0009 # Only 1 patient; Can remove
 ```
 
+# Data Missingness 
 
+```{r}
+#| label: data_missingness
 
+# Identify what data is missing 
+n_CKL_missing_age <- length(which(is.na(CKL$Age))) # 12
+n_CKL_missing_gender <- length(which(is.na(CKL$Gender))) # 13
+n_CKL_missing_calldate <- length(which(is.na(CKL$Call_Date))) # 0
+n_CKL_missing_calltime <- length(which(is.na(CKL$Call_Time))) # 0
+n_CKL_missing_PickUpLocation <- length(which(is.na(CKL$PickupLocationDescription))) # 1
 
+# Missing age, gender, and pick-up location data
 
+# Calculate percentage of data missing 
+prop_CKL_missing_age <- (n_CKL_missing_age / n_CKL) * 100 # 1.094%
+prop_CKL_missing_PickUpLocation <- (n_CKL_missing_PickUpLocation / n_CKL) * 100 # 0.091%
+prop_CKL_missing_gender <- (n_CKL_missing_gender / n_CKL) * 100 # 1.185%
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Summarize CKL data missingness in a data frame
+CKL_missingness <- data.frame(n = n_CKL,
+                              Age = n_CKL_missing_age,
+                              `Age (%)` = prop_CKL_missing_age,
+                              Gender = n_CKL_missing_gender,
+                              `Gender (%)` = prop_CKL_missing_gender,
+                              `PickUp Location` = n_CKL_missing_PickUpLocation,
+                              `PickUp Location (%)` = prop_CKL_missing_PickUpLocation,
+                              row.names = "CKL")
+```
 
