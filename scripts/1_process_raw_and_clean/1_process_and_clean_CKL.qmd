@@ -51,7 +51,7 @@ prop_CKL_M <- n_CKL_M / n_CKL # 0.5533
 prop_CKL_X <- n_CKL_X / n_CKL # 0.0009 # Only 1 patient; Can remove
 ```
 
-# Data Missingness 
+# Data Missingness
 
 ```{r}
 #| label: data_missingness
@@ -80,4 +80,22 @@ CKL_missingness <- data.frame(n = n_CKL,
                               `PickUp Location (%)` = prop_CKL_missing_PickUpLocation,
                               row.names = "CKL")
 ```
+
+# Remove Unwanted Data 
+
+```{r}
+#| label: remove_data
+
+# Remove the single patient with a gender of "X"
+CKL <- CKL[CKL$Gender != "X", ]
+```
+
+OD_PCCP$Refusal[OD_PCCP$ReturnPriorityCode!=72]<- FALSE# Save Updated Data
+
+```{r}
+#| label: save_CKL
+
+save(file = "/home2/wburr/Shawn_Research/data/CKL.rda", CKL)
+```
+
 
