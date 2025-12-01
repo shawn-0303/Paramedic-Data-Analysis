@@ -44,17 +44,28 @@ n_HPS <- nrow(HPS)
 n_HPS_F <- length(which(HPS$Gender == "F"))
 n_HPS_M <- length(which(HPS$Gender == "M"))
 n_HPS_X <- length(which(HPS$Gender == "X"))
-n_HPS_NA <- length(which(is.na(HPS$Gender)))
+n_HPS_gender_NA <- length(which(is.na(HPS$Gender)))
 
 # Calculate proportions
 prop_HPS_F <- n_HPS_F / n_HPS # 0.5349
-prop_HPS_M <- n_HPS_M / n_HPS # 0.4651
+prop_HPS_M <- n_HPS_M / n_HPS # 0.4651 #We only have F and M in this data set
 prop_HPS_X <- n_HPS_X / n_HPS # 0
-prop_HPS_NA <- n_HPS_NA / n_HPS # 0
+prop_HPS_gender_NA <- n_HPS_gender_NA / n_HPS # 0
 ```
 
+# Data Missingness 
 
+```{r}
+#| label: data_missingness
 
+# Identify what data is missing 
+n_missing_age <- length(which(is.na(HPS$Age))) # 0
+n_missing_calldate <- length(which(is.na(HPS$Call_Date))) # 0
+n_missing_calltime <- length(which(is.na(HPS$Call_Time))) # 0
+n_missing_PickUpLocation <- length(which(is.na(HPS$PickupLocationDescription))) # 0
+
+# No missing data identified 
+```
 
 
 
