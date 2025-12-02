@@ -29,9 +29,9 @@ raw_HPS$CallReceivedDateTime <- as.POSIXlt(raw_HPS$CallReceivedDateTime,
 HPS <- raw_HPS |> extract(CallReceivedDateTime, into = c("Call_Date", "Call_Time"), "(\\S+)\\s*(.*)") |>
   
                   # separate the call year, month, and day into separate columns
-                  mutate(Call_Year = year(Call_Date),
-                         Call_Month = month(Call_Date),
-                         Call_Day = day(Call_Date))
+                  mutate(Call_Year = as.factor(year(Call_Date)),
+                         Call_Month = as.factor(month(Call_Date)),
+                         Call_Day = as.factor(day(Call_Date)))
 ```
 
 # Calculate proportion of calls by gender
@@ -53,7 +53,7 @@ prop_HPS_X <- n_HPS_X / n_HPS # 0
 prop_HPS_gender_NA <- n_HPS_gender_NA / n_HPS # 0
 ```
 
-# Data Missingness 
+# Data Missingness
 
 ```{r}
 #| label: data_missingness
@@ -63,11 +63,26 @@ n_HPS_missing_age <- length(which(is.na(HPS$Age))) # 0
 n_HPS_missing_calldate <- length(which(is.na(HPS$Call_Date))) # 0
 n_HPS_missing_calltime <- length(which(is.na(HPS$Call_Time))) # 0
 n_HPS_missing_PickUpLocation <- length(which(is.na(HPS$PickupLocationDescription))) # 0
+n_HPS_missing_Destination <- length(which(is.na(HPS$`Receiving Facility/Destination`))) # 3 - Possible data missing due to no further action by paramedics
 
-# No missing data identified; No further action
+# Missing age, gender, pick-up location, and destination data
+
+# Calculate percentage of data missing 
+prop_HPS_missing_destination <- (n_HPS_missing_Destination / n_HPS) * 100 # 6.977%
+
+# Summarize CKL data missingness in a data frame
+HPS_missingness <- data.frame(n = n_HPS,
+                              Destination = n_HPS_missing_Destination,
+                              `Destination (%)` = prop_HPS_missing_destination,
+                              row.names = "HPS")
+
+HPS_missingness
 ```
 
+# Save Cleaned Data
 
+```{r}
+#| label: save_CKL
 
-
-
+save(file = "/home2/wburr/Shawn_Research/data/HPS.rda", HPS)
+```

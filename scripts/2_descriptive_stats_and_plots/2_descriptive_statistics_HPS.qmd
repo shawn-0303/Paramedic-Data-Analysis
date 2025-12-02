@@ -1,0 +1,100 @@
+---
+title: "Descriptive Statistics - HPS"
+format: pdf
+editor: visual
+---
+
+# Load Packages
+
+```{r}
+#| label: load_packages
+#| message: false
+
+library(tidyverse)
+library(dplyr)
+library(forcats)
+```
+
+# Load Cleaned HPS Datatset
+
+```{r}
+#| label: load_cleaned_data
+
+load("/home2/wburr/Shawn_Research/data/HPS.rda")
+```
+
+# Descriptive Statistics 
+
+## Pick-Up Location / Sending Facility 
+
+```{r}
+#| label: describe_pickups
+
+# Make a list of all pick up locations by decreasing frequency
+HPS_pickup_location_n <- HPS |> 
+                         group_by(fct_infreq(PickupLocationDescription)) |>
+                         count()
+HPS_pickup_location_n
+```
+
+## Destination / Recieving Facility 
+
+```{r}
+#| label: describe_pickups
+
+# Make a list of all destinations by decreasing frequency
+HPS_destination_n <- HPS |> 
+                         group_by(fct_infreq(`Receiving Facility/Destination`)) |>
+                         count()
+HPS_destination_n
+```
+
+## Age 
+
+```{r}
+#| label: describe_age
+
+# Find the age range, mean, and median of patient ages
+HPS |> pull(Age) |> summary()
+```
+
+## Gender
+
+```{r}
+#| label: describe_gender
+
+# Count the number of patients by Gender
+HPS |> group_by(Gender) |> count()
+```
+
+## Age + Gender
+
+```{r}
+#| label: describe_age_gender
+
+# Summarize patient age by gender 
+HPS |> group_by(Gender) |>
+       summarise(count = n(),
+                 mean_age = mean(Age),
+                 median_age = median(Age),
+                 min = min(Age),
+                 max = max(Age))  
+```
+
+## Call Year
+
+```{r}
+#| label: describe_call_year
+
+HPS |> group_by(Call_Year) |>
+       count()
+```
+
+
+
+
+
+
+
+
+

@@ -62,13 +62,15 @@ n_CKL_missing_gender <- length(which(is.na(CKL$Gender))) # 13
 n_CKL_missing_calldate <- length(which(is.na(CKL$Call_Date))) # 0
 n_CKL_missing_calltime <- length(which(is.na(CKL$Call_Time))) # 0
 n_CKL_missing_PickUpLocation <- length(which(is.na(CKL$PickupLocationDescription))) # 1
+n_CKL_missing_destination <- length(which(is.na(CKL$`Receiving Facility/Destination`))) # 165 - Possible data missing due to no further action by paramedics
 
-# Missing age, gender, and pick-up location data
+# Missing age, gender, pick-up location, and destination data
 
 # Calculate percentage of data missing 
 prop_CKL_missing_age <- (n_CKL_missing_age / n_CKL) * 100 # 1.094%
 prop_CKL_missing_PickUpLocation <- (n_CKL_missing_PickUpLocation / n_CKL) * 100 # 0.091%
 prop_CKL_missing_gender <- (n_CKL_missing_gender / n_CKL) * 100 # 1.185%
+prop_CKL_missing_destination <- (n_CKL_missing_destination / n_CKL) * 100 # 15.041%
 
 # Summarize CKL data missingness in a data frame
 CKL_missingness <- data.frame(n = n_CKL,
@@ -78,10 +80,14 @@ CKL_missingness <- data.frame(n = n_CKL,
                               `Gender (%)` = prop_CKL_missing_gender,
                               `PickUp Location` = n_CKL_missing_PickUpLocation,
                               `PickUp Location (%)` = prop_CKL_missing_PickUpLocation,
+                              Destination = n_CKL_missing_destination,
+                              `Destination (%)` = prop_CKL_missing_destination,
                               row.names = "CKL")
+
+CKL_missingness
 ```
 
-# Remove Unwanted Data 
+# Remove Unwanted Data
 
 ```{r}
 #| label: remove_data
@@ -90,12 +96,10 @@ CKL_missingness <- data.frame(n = n_CKL,
 CKL <- CKL[CKL$Gender != "X", ]
 ```
 
-OD_PCCP$Refusal[OD_PCCP$ReturnPriorityCode!=72]<- FALSE# Save Updated Data
+# Save Cleaned Data
 
 ```{r}
 #| label: save_CKL
 
 save(file = "/home2/wburr/Shawn_Research/data/CKL.rda", CKL)
 ```
-
-

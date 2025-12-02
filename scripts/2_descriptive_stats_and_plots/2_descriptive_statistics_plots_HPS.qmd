@@ -1,0 +1,201 @@
+---
+title: "Descriptive Statistic Plots - HPS"
+format: pdf
+editor: visual
+---
+
+# Load Packages
+
+```{r}
+#| label: load_packages
+
+library(tidyverse)
+library(ggplot2)
+library(forcats)
+```
+
+# Load Cleaned Dataset 
+
+```{r}
+#| label: load_cleaned_data
+
+load("/home2/wburr/Shawn_Research/data/HPS.rda")
+```
+
+# Plotting Descriptive Statistics  
+
+## Pick-Up Location / Sending Facility 
+
+```{r}
+#| label: plot_pickup_location
+
+# Plot the percentage of calls from each pick-up location
+HPS_pickup_plot <- ggplot(HPS,
+                          aes(x = fct_infreq(PickupLocationDescription),
+                              y = (..count..) / sum(..count..))) +
+                   geom_bar() +
+                   geom_text(aes(label = paste0(round((..count..)/sum(..count..) , 3) * 100, "%")),
+                            stat = "count",
+                            vjust = -0.1,
+                            size = 3.5) +
+                   scale_y_continuous(labels = scales::percent_format(),
+                                      breaks = seq(0, 0.65, 0.1))+
+                   scale_x_discrete(labels = c("House/Town House" = "House/ \nTown House",
+                                               "Hospital (Acute & Non-Acute)" = "Hospital (Acute \n& Non-Acute)",
+                                               "Apartment/Condo. Building" = "Apartment/ \nCondo. Building",
+                                               "Street/Highway/Road" = "Street/Highway/ \nRoad",
+                                               "Long-Term Care Home" = "Long-Term \nCare Home",
+                                               "Other (Describe in Remarks)" = "Other (Describe \nin Remarks)"))+
+                   labs(title = "HPS Drug Toxicity Calls - Pick-Up Location/Sending Facility",
+                       y = "Percent of Calls",
+                       x = "Pick-Up Location/Sending Facility")
+
+# Save the plot as a .png in a seperate folder
+ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_HPS/HPS_pickup_plot.png",
+       width = 8,
+       height = 5)
+
+# Print the plot                   
+HPS_pickup_plot
+```
+
+## Destination / Recieving Facility 
+
+```{r}
+#| label: plot_destination
+
+# Plot the percentage of calls from each pick-up location
+HPS_destination_plot <- ggplot(HPS,
+                          aes(x = fct_infreq(`Receiving Facility/Destination`),
+                              y = (..count..) / sum(..count..))) +
+                   geom_bar() +
+                   geom_text(aes(label = paste0(round((..count..)/sum(..count..) , 3) * 100, "%")),
+                            stat = "count",
+                            vjust = -0.1,
+                            size = 3.5) +
+                   scale_y_continuous(labels = scales::percent_format(),
+                                      breaks = seq(0, 0.45, 0.1)) +
+                   scale_x_discrete(labels = label_wrap_gen(16))+
+                   labs(title = "HPS Drug Toxicity Calls - Destination/Recieving Facility",
+                       y = "Percent of Calls",
+                       x = "Destination/Recieving Facility")
+
+# Save the plot as a .png in a seperate folder
+ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_HPS/HPS_destination_plot.png",
+       width = 8,
+       height = 5)
+
+# Print the plot                   
+HPS_destination_plot
+```
+
+## Age 
+
+```{r}
+#| label: plot_age 
+#| message: false
+
+# Plot a histogram of the distribution of patient ages 
+HPS_age_plot <- ggplot(HPS,
+                       aes(x = Age)) +
+                geom_histogram(binwidth = 5,
+                               aes(y = (..count..) / sum(..count..))) +
+                scale_y_continuous(labels = scales::percent_format(),
+                                   limits = c(0, 0.15)) +
+                scale_x_continuous(breaks = seq(0, 100, by = 10)) +
+                scale_x_continuous(breaks = seq(0, 100, by= 10)) +
+                labs(title = "HPS Drug Toxicity Calls - Age Distribution",
+                     y = "Percentage of Calls")
+
+# Save the plot as a .png in a seperate folder
+ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_HPS/HPS_age_plot.png",
+       width = 8,
+       height = 5)
+
+# Print the plot
+HPS_age_plot
+```
+
+## Gender 
+
+```{r}
+#| label: plot_gender
+
+# Plot a bar graph to show patient  gender demographics
+HPS_gender_plot <- ggplot(HPS,
+                          aes(x = Gender)) + 
+                   geom_bar(aes(y = (..count..) / sum(..count..))) +
+                   geom_text(aes(y = (..count..) / sum(..count..), 
+                                 label = paste0(round((..count..) / sum(..count..) , 3) * 100, "%")),
+                                 stat = "count",
+                                 vjust = -0.1) +
+                   scale_y_continuous(labels = scales::percent_format(),
+                                      breaks = seq(0, 0.6, 0.1)) +
+                   scale_x_discrete(label = c("Female", "Male")) +
+                   labs(title = "HPS Drug Toxicity Calls - Gender",
+                        y = "Percentage of Calls",
+                        x = "Gender")
+
+# Save the plot as a .png in a separate folder
+ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_HPS/HPS_gender_plot.png",
+       width = 8,
+       height = 5)
+
+# Print the plot
+HPS_gender_plot
+```
+
+## Age and Gender 
+
+```{r}
+#| label: plot_age_gender
+
+# Plot a boxplot to show the age and gender demographics of patients 
+HPS_age_gender_plot <- ggplot(HPS,
+                              aes(x = Gender,
+                                  y = Age)) +
+                       geom_boxplot() +
+                       scale_y_continuous(breaks = seq(0, 100, by = 10)) +
+                       scale_x_discrete(labels = c("Female", "Male")) +
+                       labs(title = "HPS Drug Toxicity Calls - Age and Gender")
+
+# Save the plot as a .png in a separate folder
+ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_HPS/HPS_age_gender_plot.png",
+       width = 7,
+       height = 5)
+
+# Print the plot
+HPS_age_gender_plot
+```
+
+## Calls per Year
+
+```{r}
+#| labels: plot_calls_per_year
+
+HPS$Call_Year <- factor(HPS$Call_Year,
+                        levels = c(2016:2025))
+
+HPS_call_per_year_plot <- ggplot(HPS,
+                                 aes(x = Call_Year)) +
+                          geom_bar(stat = "count") +
+                          geom_text(stat = "count",
+                                    aes(label = ..count..),
+                                    vjust = -0.1) +
+                          scale_x_discrete(drop = FALSE)
+                          
+  
+
+HPS_call_per_year_plot
+```
+
+
+
+
+
+
+
+
+
+
+
