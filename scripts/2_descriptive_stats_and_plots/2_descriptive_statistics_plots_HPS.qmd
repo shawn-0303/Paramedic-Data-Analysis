@@ -51,7 +51,7 @@ HPS_pickup_plot <- ggplot(HPS,
                        y = "Percent of Calls",
                        x = "Pick-Up Location/Sending Facility")
 
-# Save the plot as a .png in a seperate folder
+# Save the plot as a .png in a separate folder
 ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_HPS/HPS_pickup_plot.png",
        width = 8,
        height = 5)
@@ -81,7 +81,7 @@ HPS_destination_plot <- ggplot(HPS,
                        y = "Percent of Calls",
                        x = "Destination/Recieving Facility")
 
-# Save the plot as a .png in a seperate folder
+# Save the plot as a .png in a separate folder
 ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_HPS/HPS_destination_plot.png",
        width = 8,
        height = 5)
@@ -108,7 +108,7 @@ HPS_age_plot <- ggplot(HPS,
                 labs(title = "HPS Drug Toxicity Calls - Age Distribution",
                      y = "Percentage of Calls")
 
-# Save the plot as a .png in a seperate folder
+# Save the plot as a .png in a separate folder
 ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_HPS/HPS_age_plot.png",
        width = 8,
        height = 5)
@@ -243,7 +243,7 @@ ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots
        height = 5)
 ```
 
-## Calls per Month 
+## Calls per Month
 
 ```{r}
 #| labels: plot_calls_per_month

@@ -23,9 +23,9 @@ library(forcats)
 load("/home2/wburr/Shawn_Research/data/CKL.rda")
 ```
 
-# Descriptive Statistics 
+# Descriptive Statistics
 
-## Pick-Up Location / Sending Facility 
+## Pick-Up Location / Sending Facility
 
 ```{r}
 #| label: describe_pickups
@@ -37,19 +37,19 @@ CKL_pickup_location_n <- CKL |>
 CKL_pickup_location_n
 ```
 
-## Destination / Recieving Facility 
+## Destination / Recieving Facility
 
 ```{r}
 #| label: describe_pickups
 
 # Make a list of all destinations by decreasing frequency
 CKL_destination_n <- CKL |> 
-                         group_by(fct_infreq(`Receiving Facility/Destination`)) |>
-                         count()
+                     group_by(fct_infreq(`Receiving Facility/Destination`)) |>
+                     count()
 CKL_destination_n
 ```
 
-## Age 
+## Age
 
 ```{r}
 #| label: describe_age
@@ -89,17 +89,3 @@ CKL |> group_by(Gender) |>
 CKL |> group_by(Call_Year) |>
        count()
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-

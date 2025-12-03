@@ -87,7 +87,7 @@ CKL_missingness <- data.frame(n = n_CKL,
 CKL_missingness
 ```
 
-# Age - Change Month Age Unit to Year 
+# Age - Change Month Age Unit to Year
 
 ```{r}
 #| label: change_ageunit
@@ -107,7 +107,6 @@ CKL <- CKL |>
 # Remove the one patient with Gender "X"
 CKL <- CKL[-which(CKL$Gender == "X"),]
 ```
-
 
 # Save Cleaned Data
 
