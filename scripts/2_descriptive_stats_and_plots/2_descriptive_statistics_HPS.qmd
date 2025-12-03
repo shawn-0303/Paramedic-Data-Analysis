@@ -23,9 +23,9 @@ library(forcats)
 load("/home2/wburr/Shawn_Research/data/HPS.rda")
 ```
 
-# Descriptive Statistics 
+# Descriptive Statistics
 
-## Pick-Up Location / Sending Facility 
+## Pick-Up Location / Sending Facility
 
 ```{r}
 #| label: describe_pickups
@@ -37,7 +37,7 @@ HPS_pickup_location_n <- HPS |>
 HPS_pickup_location_n
 ```
 
-## Destination / Recieving Facility 
+## Destination / Recieving Facility
 
 ```{r}
 #| label: describe_pickups
@@ -49,7 +49,7 @@ HPS_destination_n <- HPS |>
 HPS_destination_n
 ```
 
-## Age 
+## Age
 
 ```{r}
 #| label: describe_age
@@ -89,12 +89,3 @@ HPS |> group_by(Gender) |>
 HPS |> group_by(Call_Year) |>
        count()
 ```
-
-
-
-
-
-
-
-
-
