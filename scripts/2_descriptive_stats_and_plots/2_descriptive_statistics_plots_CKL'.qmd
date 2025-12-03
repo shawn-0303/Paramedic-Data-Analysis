@@ -3,3 +3,51 @@ title: "Descriptive Statistic Plots - CKL"
 format: pdf
 editor: visual
 ---
+
+# Load Packages
+
+```{r}
+#| label: load_packages
+#| message: false
+
+library(tidyverse)
+library(ggplot2)
+library(forcats)
+```
+
+# Load Cleaned Dataset
+
+```{r}
+#| label: load_cleaned_data
+
+load("/home2/wburr/Shawn_Research/data/CKL.rda")
+```
+
+# Plotting Descriptive Statistics (Location, Age, and Gender)
+
+## Pick-Up Location / Sending Facility
+
+```{r}
+#| label: plot_pickup_location
+
+# Plot the percentage of calls from each pick-up location
+CKL_pickup_plot <- ggplot(CKL,
+                          aes(x = fct_infreq(PickupLocationDescription),
+                              y = (after_stat(count)) / sum(after_stat(count)))) +
+                   geom_bar() +
+                   geom_text(aes(label = paste0(round((after_stat(count))/sum(after_stat(count)) , 3) * 100, "%")),
+                            stat = "count",
+                            vjust = -0.2,
+                            size = 3) +
+                   labs(title = "CKL Drug Toxicity Calls - Pick-Up Location/Sending Facility",
+                       y = "Percent of Calls",
+                       x = "Pick-Up Location/Sending Facility") +
+                   theme(axis.text.x = element_text(angle = 45,
+                                                    hjust = 1)) 
+
+CKL_pickup_plot
+```
+
+
+
+

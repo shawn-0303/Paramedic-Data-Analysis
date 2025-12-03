@@ -4,7 +4,11 @@ format: pdf
 editor: visual
 ---
 
+
+
 # Load Raw Data and Packages
+
+
 
 ```{r}
 #| label: load
@@ -16,7 +20,11 @@ library(tidyverse)
 load("/home2/wburr/Shawn_Research/data/raw_data/raw_CKL.rda")
 ```
 
+
+
 # Format Date + Time
+
+
 
 ```{r}
 #| label: format_date
@@ -34,7 +42,11 @@ CKL <- raw_CKL |> extract(CallReceivedDateTime, into = c("Call_Date", "Call_Time
                          Call_Day = day(Call_Date))
 ```
 
+
+
 # Calculate proportion of calls by gender
+
+
 
 ```{r}
 #| label: by_gender
@@ -51,7 +63,11 @@ prop_CKL_M <- n_CKL_M / n_CKL # 0.5533
 prop_CKL_X <- n_CKL_X / n_CKL # 0.0009 # Only 1 patient; Can remove
 ```
 
+
+
 # Data Missingness
+
+
 
 ```{r}
 #| label: data_missingness
@@ -87,7 +103,11 @@ CKL_missingness <- data.frame(n = n_CKL,
 CKL_missingness
 ```
 
+
+
 # Age - Change Month Age Unit to Year 
+
+
 
 ```{r}
 #| label: change_ageunit
@@ -99,7 +119,11 @@ CKL <- CKL |>
               AgeUnit = if_else(AgeUnit == "mths", "yrs", AgeUnit))
 ```
 
+
+
 # Gender - Remove the one case where Gender = "X"
+
+
 
 ```{r}
 #| label: remove_gender_X
@@ -109,10 +133,15 @@ CKL <- CKL[-which(CKL$Gender == "X"),]
 ```
 
 
+
+
 # Save Cleaned Data
+
+
 
 ```{r}
 #| label: save_CKL
 
 save(file = "/home2/wburr/Shawn_Research/data/CKL.rda", CKL)
 ```
+
