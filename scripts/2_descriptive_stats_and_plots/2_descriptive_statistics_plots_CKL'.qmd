@@ -246,7 +246,6 @@ ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots
        height = 5)
 ```
 
-
 ## Calls per Month
 
 ```{r}
@@ -259,7 +258,7 @@ CKL_call_per_month_barplot <- ggplot(CKL_call_counts_monthly,
                            geom_bar(stat = "identity") +
                            facet_wrap(Call_Year~.,
                                       ncol = 5) +
-                           labs(title = "Number of HPS Drug Toxicity Calls per Month",
+                           labs(title = "Number of CKL Drug Toxicity Calls per Month",
                                 x = "Month",
                                 y = "Number of Calls")
 
@@ -279,7 +278,7 @@ CKL_call_per_month_lineplot <- ggplot(CKL_call_counts_monthly,
                                           color = Call_Year)) +
                                geom_line() +
                                geom_point() +
-                               labs(title = "Number of HPS Drug Toxicity Calls per Month",
+                               labs(title = "Number of CKL Drug Toxicity Calls per Month",
                                     x = "Month",
                                     y = "Number of Calls")
                                
@@ -305,7 +304,8 @@ CKL_call_per_year_crude_plot <- ggplot(CKL_call_counts_yearly,
                                         group = 1)) +
                              geom_line() +
                              geom_point() +
-                             labs(title = "Crude Rate of HPS Drug Toxicity Calls per Year",
+                             coord_cartesian(ylim = c(0, 400)) +
+                             labs(title = "Crude Rate of CKL Drug Toxicity Calls per Year",
                                   x = "Year",
                                   y = "Number of Calls - Crude Rate (per 1000 Population)")
 
@@ -317,7 +317,6 @@ ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots
        width = 9,
        height = 5)
 ```
-
 
 ## Calls per Month - Standardized
 
@@ -332,7 +331,8 @@ CKL_call_per_month_crude_plot <- ggplot(CKL_call_counts_monthly,
                              geom_line() +
                              facet_wrap(Call_Year~.,
                                         ncol = 5) +
-                             labs(title = "Crude Rate of HPS Drug Toxicity Calls per Month",
+                             coord_cartesian(ylim = c(0, 100)) +
+                             labs(title = "Crude Rate of CKL Drug Toxicity Calls per Month",
                                   x = "Month",
                                   y = "Number of Calls - Crude Rate (per 1000 Population)")
 

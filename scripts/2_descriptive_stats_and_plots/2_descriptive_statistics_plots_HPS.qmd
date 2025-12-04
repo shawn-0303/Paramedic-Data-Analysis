@@ -301,6 +301,7 @@ HPS_call_per_year_crude_plot <- ggplot(HPS_call_counts_yearly,
                                         group = 1)) +
                              geom_line() +
                              geom_point() +
+                             coord_cartesian(ylim = c(0, 400)) +
                              labs(title = "Crude Rate of HPS Drug Toxicity Calls per Year",
                                   x = "Year",
                                   y = "Number of Calls - Crude Rate (per 1000 Population)")
@@ -327,6 +328,7 @@ HPS_call_per_month_crude_plot <- ggplot(HPS_call_counts_monthly,
                              geom_line() +
                              facet_wrap(Call_Year~.,
                                         ncol = 5) +
+                             coord_cartesian(ylim = c(0, 100)) +
                              labs(title = "Crude Rate of HPS Drug Toxicity Calls per Month",
                                   x = "Month",
                                   y = "Number of Calls - Crude Rate (per 1000 Population)")
