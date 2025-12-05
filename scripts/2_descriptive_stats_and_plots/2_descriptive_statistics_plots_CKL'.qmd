@@ -178,13 +178,16 @@ CKL_age_gender_plot
 ```{r}
 #| label: standardize_data
 
+# Store the population for the City of Kawartha Lakes (2021 Census)
+KawarthaLakes_City_pop <- 79247
+
 # Summarize call counts per year
 CKL_call_counts_yearly <- CKL |>
                           count(Call_Year) |>
                           # Express the yearly call counts as a crude rate per 1000 population
                           # Crude Rate (per 1000 population) = (Call Counts / Population) * 1000
                           mutate(Call_Year = factor(Call_Year),
-                                 standardized_per_1000 = (n / nrow(CKL)) * 1000)
+                                 standardized_per_1000 = (n / KawarthaLakes_City_pop) * 1000)
 
 # Summarize call counts per month
 CKL_call_counts_monthly <- CKL |>
@@ -196,7 +199,7 @@ CKL_call_counts_monthly <- CKL |>
                           # Crude Rate (per 1000 population) = (Call Counts / Population) * 1000
                            mutate(Call_Year = factor(Call_Year, levels = 2016:2025),
                                   Call_Month = factor(Call_Month, levels = 1:12),
-                                  standardized_per_1000 = (n / nrow(CKL)) * 1000)
+                                  standardized_per_1000 = (n / KawarthaLakes_City_pop) * 1000)
 ```
 
 # Plotting Descriptive Statistics (Yearly and Monthly Call Counts)
@@ -304,7 +307,6 @@ CKL_call_per_year_crude_plot <- ggplot(CKL_call_counts_yearly,
                                         group = 1)) +
                              geom_line() +
                              geom_point() +
-                             coord_cartesian(ylim = c(0, 400)) +
                              labs(title = "Crude Rate of CKL Drug Toxicity Calls per Year",
                                   x = "Year",
                                   y = "Number of Calls - Crude Rate (per 1000 Population)")
@@ -331,7 +333,6 @@ CKL_call_per_month_crude_plot <- ggplot(CKL_call_counts_monthly,
                              geom_line() +
                              facet_wrap(Call_Year~.,
                                         ncol = 5) +
-                             coord_cartesian(ylim = c(0, 100)) +
                              labs(title = "Crude Rate of CKL Drug Toxicity Calls per Month",
                                   x = "Month",
                                   y = "Number of Calls - Crude Rate (per 1000 Population)")
