@@ -13,7 +13,7 @@ editor: visual
 library(dplyr)
 library(tidyverse)
 
-load("/home2/wburr/Shawn_Research/data/raw_data/raw_CKL.rda")
+load(here("data", "raw_data", "raw_CKL.rda"))
 ```
 
 # Format Date + Time
@@ -130,5 +130,6 @@ CKL$PickupLocationDescription[CKL$PickupLocationDescription == "Other (Describe 
 ```{r}
 #| label: save_CKL
 
-save(file = "/home2/wburr/Shawn_Research/data/CKL.rda", CKL)
+save(CKL,
+     file = here("data", "CKL.rda"))
 ```
