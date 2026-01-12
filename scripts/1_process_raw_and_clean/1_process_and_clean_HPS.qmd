@@ -13,7 +13,7 @@ editor: visual
 library(dplyr)
 library(tidyverse)
 
-load("/home2/wburr/Shawn_Research/data/raw_data/raw_HPS.rda")
+load(here("data", "raw_data", "raw_HPS.rda"))
 ```
 
 # Format Date + Time
@@ -79,10 +79,10 @@ HPS_missingness <- data.frame(n = n_HPS,
 HPS_missingness
 ```
 
-# Change Column Values After Discussion With Paramedic 
+# Change Column Values After Discussion With Paramedic
 
 ```{r}
-#| label: change_columb_values
+#| label: change_column_values
 
 # Missing Destination data (NA) to "Patient Not Transported"
 HPS$`Receiving Facility/Destination`[is.na(HPS$`Receiving Facility/Destination`)] <- "Not Transported"
@@ -94,7 +94,8 @@ HPS$PickupLocationDescription[HPS$PickupLocationDescription == "Other (Describe 
 # Save Cleaned Data
 
 ```{r}
-#| label: save_CKL
+#| label: save_HPS
 
-save(file = "/home2/wburr/Shawn_Research/data/HPS.rda", HPS)
+save(HPS,
+     file = here("data", "HPS.rda"))
 ```

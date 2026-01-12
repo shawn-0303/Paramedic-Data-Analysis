@@ -10,15 +10,17 @@ editor: visual
 #| label: packages
 
 library(readxl)
+library(here)
 ```
 
-# Load HPS Data - 
+# Load HPS Data -
 
 ```{r}
 #| label: load_CKL_data
 
-raw_HPS <- read_xlsx("/home2/wburr/Shawn_Research/raw_data/HPS-InTox_Data_Pull.xlsx",
+raw_HPS <- read_xlsx(here("raw_data", "HPS-InTox_Data_Pull.xlsx"),
                      col_names = TRUE)
 
-save(file = "/home2/wburr/Shawn_Research/data/raw_data/raw_HPS.rda", raw_HPS)
+save(raw_HPS,
+     file = here("data", "raw_data", "raw_HPS.rda"))
 ```

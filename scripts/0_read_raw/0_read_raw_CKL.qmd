@@ -10,15 +10,17 @@ editor: visual
 #| label: packages
 
 library(readxl)
+library(here)
 ```
 
-# Load CKL Data -
+# Load CKL Data
 
 ```{r}
 #| label: load_CKL_data
 
-raw_CKL <- read_xlsx("/home2/wburr/Shawn_Research/raw_data/CKL-Intox_Data_Pull.xlsx",
+raw_CKL <- read_xlsx(here("raw_data", "CKL-Intox_Data_Pull.xlsx"),
                      col_names = TRUE)
 
-save(file = "/home2/wburr/Shawn_Research/data/raw_data/raw_CKL.rda", raw_CKL)
+save(raw_CKL,
+     file = here("data", "raw_data", "raw_CKL.rda"))
 ```

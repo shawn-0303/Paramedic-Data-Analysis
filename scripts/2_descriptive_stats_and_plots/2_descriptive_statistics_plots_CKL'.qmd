@@ -20,7 +20,7 @@ library(forcats)
 ```{r}
 #| label: load_cleaned_data
 
-load("/home2/wburr/Shawn_Research/data/CKL.rda")
+load(here("data", "CKL.rda"))
 ```
 
 # Plotting Descriptive Statistics (Location, Age, and Gender)
