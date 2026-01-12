@@ -79,6 +79,18 @@ HPS_missingness <- data.frame(n = n_HPS,
 HPS_missingness
 ```
 
+# Change Column Values After Discussion With Paramedic 
+
+```{r}
+#| label: change_columb_values
+
+# Missing Destination data (NA) to "Patient Not Transported"
+HPS$`Receiving Facility/Destination`[is.na(HPS$`Receiving Facility/Destination`)] <- "Not Transported"
+
+# Change Other label in pick-up location
+HPS$PickupLocationDescription[HPS$PickupLocationDescription == "Other (Describe in Remarks)"] <- "Other"
+```
+
 # Save Cleaned Data
 
 ```{r}

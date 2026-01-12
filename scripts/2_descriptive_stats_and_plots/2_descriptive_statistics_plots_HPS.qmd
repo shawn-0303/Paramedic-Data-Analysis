@@ -46,7 +46,7 @@ HPS_pickup_plot <- ggplot(HPS,
                                                "Apartment/Condo. Building" = "Apartment/ \nCondo. Building",
                                                "Street/Highway/Road" = "Street/Highway/ \nRoad",
                                                "Long-Term Care Home" = "Long-Term \nCare Home",
-                                               "Other (Describe in Remarks)" = "Other (Describe \nin Remarks)"))+
+                                               "Other (Describe in Remarks)" = "Other"))+
                    labs(title = "HPS Drug Toxicity Calls - Pick-Up Location/Sending Facility",
                        y = "Percent of Calls",
                        x = "Pick-Up Location/Sending Facility")

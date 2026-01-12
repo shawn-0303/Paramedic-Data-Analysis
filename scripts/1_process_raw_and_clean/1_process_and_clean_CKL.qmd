@@ -108,6 +108,23 @@ CKL <- CKL |>
 CKL <- CKL[-which(CKL$Gender == "X"),]
 ```
 
+# Change Column Values After Discussion with Paramedic
+
+```{r}
+#| label: change_columb_values
+
+# Missing Destination data (NA) to "Patient Not Transported"
+CKL$`Receiving Facility/Destination`[is.na(CKL$`Receiving Facility/Destination`)] <- "Not Transported"
+
+# Change Other Label in destination
+CKL$`Receiving Facility/Destination`[CKL$`Receiving Facility/Destination` == "See remarks section for address"] <- "Other"
+
+# Change Other label in pickup location
+CKL$PickupLocationDescription[CKL$PickupLocationDescription == "Other (Describe in Remarks)"] <- "Other"
+
+
+```
+
 # Save Cleaned Data
 
 ```{r}
