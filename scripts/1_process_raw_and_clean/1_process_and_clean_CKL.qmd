@@ -12,6 +12,7 @@ editor: visual
 
 library(dplyr)
 library(tidyverse)
+library(here)
 
 load(here("data", "raw_data", "raw_CKL.rda"))
 ```
@@ -87,19 +88,32 @@ CKL_missingness <- data.frame(n = n_CKL,
 CKL_missingness
 ```
 
-# Age - Change Month Age Unit to Year
+# Data Cleaning
+
+## Age - Change Month Age Unit to Year
 
 ```{r}
 #| label: change_ageunit
 
 CKL <- CKL |> 
       # Change the row with age "8 Months" to its equivalent in Years
-       mutate(Age = if_else(AgeUnit == "mths", Age / 12, Age),
+       mutate(Age = if_else(AgeUnit == "mths", round(Age / 12, 2), Age),
               # Change the label for that row to match 
               AgeUnit = if_else(AgeUnit == "mths", "yrs", AgeUnit))
 ```
 
-# Gender - Remove the one case where Gender = "X"
+## Age - Fix Outlier
+
+```{r}
+#| label: fix_outlier
+
+# The date was calculated using 1902 instead of 2002, resulting in an outlier of a 123-year-old patient
+
+CKL[CKL$`Call Number/Patient Number` == 4651024, "Age"] <- 2025 - 2002
+```
+
+
+## Gender - Remove the one case where Gender = "X"
 
 ```{r}
 #| label: remove_gender_X
@@ -108,10 +122,10 @@ CKL <- CKL |>
 CKL <- CKL[-which(CKL$Gender == "X"),]
 ```
 
-# Change Column Values After Discussion with Paramedic
+## Change Column Values After Discussion with Paramedic
 
 ```{r}
-#| label: change_columb_values
+#| label: change_column_values
 
 # Missing Destination data (NA) to "Patient Not Transported"
 CKL$`Receiving Facility/Destination`[is.na(CKL$`Receiving Facility/Destination`)] <- "Not Transported"
@@ -121,8 +135,6 @@ CKL$`Receiving Facility/Destination`[CKL$`Receiving Facility/Destination` == "Se
 
 # Change Other label in pickup location
 CKL$PickupLocationDescription[CKL$PickupLocationDescription == "Other (Describe in Remarks)"] <- "Other"
-
-
 ```
 
 # Save Cleaned Data
