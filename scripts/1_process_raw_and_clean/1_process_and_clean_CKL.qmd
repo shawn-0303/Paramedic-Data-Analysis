@@ -30,9 +30,10 @@ raw_CKL$CallReceivedDateTime <- as.POSIXlt(raw_CKL$CallReceivedDateTime,
 CKL <- raw_CKL |> extract(CallReceivedDateTime, into = c("Call_Date", "Call_Time"), "(\\S+)\\s*(.*)") |>
   
                   # separate the call year, month, and day into separate columns
-                  mutate(Call_Year = year(Call_Date),
-                         Call_Month = month(Call_Date),
-                         Call_Day = day(Call_Date))
+                  mutate(Call_Date = as.Date(Call_Date),
+                         Call_Year = as.factor(year(Call_Date)),
+                         Call_Month = as.factor(month(Call_Date)),
+                         Call_Day = as.factor(day(Call_Date)))
 ```
 
 # Calculate proportion of calls by gender
@@ -111,7 +112,6 @@ CKL <- CKL |>
 
 CKL[CKL$`Call Number/Patient Number` == 4651024, "Age"] <- 2025 - 2002
 ```
-
 
 ## Gender - Remove the one case where Gender = "X"
 

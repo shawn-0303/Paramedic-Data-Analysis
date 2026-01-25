@@ -12,6 +12,7 @@ editor: visual
 
 library(dplyr)
 library(tidyverse)
+library(here)
 
 load(here("data", "raw_data", "raw_HPS.rda"))
 ```
@@ -29,7 +30,8 @@ raw_HPS$CallReceivedDateTime <- as.POSIXlt(raw_HPS$CallReceivedDateTime,
 HPS <- raw_HPS |> extract(CallReceivedDateTime, into = c("Call_Date", "Call_Time"), "(\\S+)\\s*(.*)") |>
   
                   # separate the call year, month, and day into separate columns
-                  mutate(Call_Year = as.factor(year(Call_Date)),
+                  mutate(Call_Date = as.Date(Call_Date),
+                         Call_Year = as.factor(year(Call_Date)),
                          Call_Month = as.factor(month(Call_Date)),
                          Call_Day = as.factor(day(Call_Date)))
 ```

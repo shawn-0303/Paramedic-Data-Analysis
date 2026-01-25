@@ -13,6 +13,7 @@ editor: visual
 library(tidyverse)
 library(ggplot2)
 library(forcats)
+library(here)
 ```
 
 # Load Cleaned Dataset
@@ -162,7 +163,7 @@ CKL_age_gender_plot <- CKL |>
                        geom_boxplot() +
                        scale_y_continuous(breaks = seq(0, 130, by = 10)) +
                        scale_x_discrete(labels = c("Female", "Male")) +
-                       labs(title = "HPS Drug Toxicity Calls - Age and Gender")
+                       labs(title = "CKL Drug Toxicity Calls - Age and Gender")
 
 # Save the plot as a .png in a separate folder
 ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_age_gender_plot.png",
