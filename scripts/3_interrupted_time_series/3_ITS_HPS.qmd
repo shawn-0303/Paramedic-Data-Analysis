@@ -12,6 +12,7 @@ editor: visual
 
 library(here)
 library(lubridate)
+library(TTR)
 ```
 
 # Load Cleaned Dataset
@@ -22,7 +23,7 @@ library(lubridate)
 load(here("data", "HPS.rda"))
 ```
 
-## Call Counts per Month
+# Call Counts per Month
 
 ```{r}
 #| labels: call_counts_per_month
@@ -48,8 +49,8 @@ HPS_call_counts_monthly_w_Intervention <- HPS_full_months |>
                                           mutate(Num_Calls = replace_na(Num_Calls, 0),
                                                  Time_Point = row_number(),
                                                  
-                                                 # Intervention = 0 No
-                                                 Intervention = if_else(Call_Month < COVID_StateofEmergency_Date, 0, 1),
+                                                 # No Intervention = 0 ; Intervention = 1
+                                                 Intervention = as.factor(if_else(Call_Month < COVID_StateofEmergency_Date, 0, 1)),
                                                  
                                                  # Calculate the # of months post intervention
                                                  Post_Intervention = if_else(Intervention == 1,
@@ -63,7 +64,7 @@ HPS_call_counts_monthly_w_Intervention <- HPS_full_months |>
 #| labels: plot_calls_per_month
 
 # Plot the number of calls per month on a line plot
-HPS_call_per_month_cont_lineplot <- ggplot(HPS_call_counts_monthly_w_Intervention,
+HPS_call_per_month_plot <- ggplot(HPS_call_counts_monthly_w_Intervention,
                                     aes(x = Call_Month,
                                         y = Num_Calls)) +
                              geom_point() +
@@ -77,10 +78,10 @@ HPS_call_per_month_cont_lineplot <- ggplot(HPS_call_counts_monthly_w_Interventio
 
 
 # Print the bar plot
-HPS_call_per_month_cont_lineplot
+HPS_call_per_month_plot
 ```
 
-## ITS Model
+## ITS Model - Monthly
 
 ```{r}
 #| label: HPS_ITS_mod
@@ -90,6 +91,85 @@ HPS_ITS_mod <- lm(Num_Calls ~ Time_Point + Intervention + Post_Intervention,
 
 HPS_ITS_mod |> summary()
 ```
+
+## Monthly ITS - Using `ts()`
+
+```{r}
+MonthlyCallCount.ts <- ts(HPS_call_counts_monthly_w_Intervention$Num_Calls, 
+                          frequency = 12,
+                          start= c(2016, 8)) 
+MonthlyCallCount.ts
+
+ts.plot(MonthlyCallCount.ts)
+```
+
+# Call Counts per Day
+
+```{r}
+HPS_daily <- tibble(Call_Day = seq(from = floor_date(min(HPS$Call_Date), "day"),
+                                   to   = floor_date(max(HPS$Call_Date), "day"),
+                                   by   = "day"))
+
+# Monthly Call Counts
+HPS_call_counts_daily <-  HPS |>
+                          mutate(Call_Day = floor_date(Call_Date, "day")) |> 
+                          count(Call_Day, name = "Num_Calls")
+
+
+# Monthly call counts with Intervention variables
+HPS_call_counts_daily_w_Intervention <- HPS_daily |>
+                                          left_join(HPS_call_counts_daily, by = "Call_Day") |>
+                                          mutate(Num_Calls = replace_na(Num_Calls, 0),
+                                                 Time_Point = row_number(),
+                                                 
+                                                 # No Intervention = 0 ; Intervention = 1
+                                                 Intervention = as.factor(if_else(Call_Day < COVID_StateofEmergency_Date, 0, 1)),
+                                                 
+                                                 # Calculate the # of months post intervention
+                                                 Post_Intervention = if_else(Intervention == 1,
+                                                                             Time_Point - min(Time_Point[Intervention == 1]) + 1,0)) |>
+                                          select(Time_Point, everything())
+```
+
+## Plot Calls per Month with Intervention
+
+```{r}
+#| labels: plot_calls_per_month
+
+# Plot the number of calls per month on a line plot
+HPS_call_daily_plot <- ggplot(HPS_call_counts_daily_w_Intervention,
+                                    aes(x = Call_Day,
+                                        y = Num_Calls)) +
+                             geom_point() +
+                             geom_vline(xintercept = COVID_StateofEmergency_Date,
+                                        color = "red") +
+                             labs(title = "Number of HPS Drug Toxicity Calls per Month",
+                                  x = "Day",
+                                  y = "Number of Calls")
+HPS_call_daily_plot
+```
+
+## Daily ITS - Using `ts()`
+
+```{r}
+HPS_DailyCallCount.ts <- ts(HPS_call_counts_daily_w_Intervention$Num_Calls)
+HPS_DailyCallCount.ts
+
+ts.plot(HPS_DailyCallCount.ts)
+```
+
+## Daily ITS - Simple Moving Average
+
+```{r}
+HPS_DailyCallCount.sma <- SMA(HPS_DailyCallCount.ts, n =14)
+HPS_DailyCallCount.sma
+
+plot.ts(HPS_DailyCallCount.sma)
+```
+
+
+
+
 
 
 
