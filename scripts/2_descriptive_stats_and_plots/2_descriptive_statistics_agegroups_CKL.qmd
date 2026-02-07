@@ -31,16 +31,47 @@ load(here("data", "CKL.rda"))
 #| label: describe_pickups
 
 # Make a list of all pick up locations by decreasing frequency
-HPS |>
+CKL |>
   group_by(PickupLocationDescription, Age_Groups) |>
   count()
 ```
 
 
+## Destination / Recieving Facility
 
+```{r}
+#| label: describe_pickups
 
+# Make a list of all destinations by decreasing frequency
+CKL |> 
+  group_by(`Receiving Facility/Destination`, Age_Groups) |>
+  count()
+```
 
+## Gender
 
+```{r}
+#| label: describe_gender
+
+# Count the number of patients by Gender
+CKL |> group_by(Age_Groups, Gender) |> count()
+```
+
+## Age + Gender
+
+```{r}
+#| label: describe_age_gender
+
+# Summarize patient age by gender 
+CKL |> group_by(Gender, Age_Groups) |>
+       drop_na(Gender, Age_Groups) |>
+       summarise(count = n(),
+                 mean_age = mean(Age, na.rm = TRUE),
+                 median_age = median(Age, na.rm = TRUE),
+                 min = min(Age, na.rm = TRUE),
+                 max = max(Age, na.rm = TRUE),
+                 .groups = "drop") 
+```
 
 
 
