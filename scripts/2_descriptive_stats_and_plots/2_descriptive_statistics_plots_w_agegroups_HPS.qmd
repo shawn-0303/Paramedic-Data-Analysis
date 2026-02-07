@@ -13,6 +13,8 @@ library(tidyverse)
 library(ggplot2)
 library(forcats)
 library(here)
+library(vcd)
+library(RColorBrewer)
 ```
 
 # Load Cleaned Dataset
@@ -109,7 +111,7 @@ HPS_age_group_gender_plot <- ggplot(HPS,
                         fill = "Age Groups")
 
 # Save the plot as a .png in a separate folder
-ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_agegroups_HPS", "HPS_gender_ageplot_plot.png"),
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_agegroups_HPS", "HPS_gender_w_agegroup_plot.png"),
        width = 8,
        height = 5)
 
@@ -118,32 +120,82 @@ ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_st
 HPS_age_group_gender_plot
 ```
 
-
-## Age and Gender
+## Age and Gender Mosaic 
 
 ```{r}
-#| label: plot_age_gender
-
-# Plot a boxplot to show the age and gender demographics of patients 
-HPS_agegroup_age_gender_plot <- ggplot(HPS,
-                                aes(x = Gender,
-                                    y = Age,
-                                    fill = Age_Groups)) +
-                         geom_boxplot() +
-                         scale_y_continuous(breaks = seq(0, 100, by = 10)) +
-                         scale_x_discrete(labels = c("Female", "Male")) +
-                         labs(title = "HPS Drug Toxicity Calls - Age and Gender")
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_HPS/HPS_age_gender_plot.png",
-       width = 7,
-       height = 5)
+png(filename = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_agegroups_HPS", "HPS_agegroup_gender_mosaic.png"),
+    width = 8,
+    height = 5,
+    units = "in",
+    res = 300)
 
-# Print the plot
-HPS_agegroup_age_gender_plot
+agegroup_gender_mosaic <- mosaic(~ Gender + Age_Groups, data = HPS,
+                           highlighting = "Age_Groups",
+                           highlighting_fill=brewer.pal(5, "Accent"),
+                           gp_labels = gpar(fontsize = 10),
+                           labeling_args = list(set_varnames = list(Age_Groups = "Age Groups",
+                                                                    Gender = "Gender")))
+
+dev.off()
 ```
 
+# Plotting Descriptive Statistics (Yearly and Monthly Call Counts)
 
+## Calls per Year
+
+```{r}
+#| labels: plot_calls_per_year
+
+# Plot the number of calls per year on a bar plot
+HPS_call_per_year_w_age_group_barplot <- ggplot(HPS,
+                                                aes(x = factor(Call_Year, levels = 2016:2025),
+                                                    fill = Age_Groups)) +
+                                         geom_bar(position = position_dodge2(preserve = "single")) +
+                                         scale_x_discrete(drop = FALSE) +
+                                         labs(title = "Number of HPS Drug Toxicity Calls per Year by Age Group",
+                                              x = "Year",
+                                              y = "Number of Calls",
+                                              fill = "Age Groups")
+
+# Print the bar plot
+HPS_call_per_year_w_age_group_barplot
+
+# Save the plot as a .png in a separate folder
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_agegroups_HPS", "HPS_calls_peryear_w_agegroup_barplot.png"),
+       width = 9,
+       height = 5)
+```
+
+## Calls per Month
+
+```{r}
+#| labels: plot_calls_per_month
+#| warning: false
+
+# Plot the number of calls per month (subsetted by year) on a bar plot
+HPS_call_per_month_w_age_group_barplot <- ggplot(HPS,
+                                                aes(x = Call_Month,
+                                                    fill = Age_Groups)) +
+                                                 geom_bar(position = position_dodge2(preserve = "single")) +
+                                                 facet_wrap(factor(Call_Year, levels = 2016:2025)~.,
+                                                            drop = FALSE,
+                                                            ncol = 5) +
+                                                 scale_y_continuous(breaks = seq(0, 2, 1)) +
+                                                 labs(title = "Number of HPS Drug Toxicity Calls per Month by Age Group",
+                                                      x = "Month",
+                                                      y = "Number of Calls",
+                                                      fill = "Age Groups")
+
+# Print the bar plot
+HPS_call_per_month_w_age_group_barplot
+
+# Save the plot as a .png in a separate folder
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_agegroups_HPS", "HPS_calls_permonth_w_agegroup_barplot.png"),
+       width = 11,
+       height = 5)
+```
 
 
 
