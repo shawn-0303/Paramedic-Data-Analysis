@@ -1,7 +1,6 @@
 ---
 title: "Descriptive Statistic - CKL"
 format: pdf
-editor: visual
 ---
 
 # Load Packages
@@ -32,10 +31,9 @@ load(here("data", "CKL.rda"))
 #| label: describe_pickups
 
 # Make a list of all pick up locations by decreasing frequency
-CKL_pickup_location_n <- CKL |> 
-                         group_by(fct_infreq(PickupLocationDescription)) |>
-                         count()
-CKL_pickup_location_n
+CKL |> 
+  group_by(fct_infreq(PickupLocationDescription)) |>
+  count()
 ```
 
 ## Destination / Recieving Facility
@@ -44,10 +42,9 @@ CKL_pickup_location_n
 #| label: describe_pickups
 
 # Make a list of all destinations by decreasing frequency
-CKL_destination_n <- CKL |> 
-                     group_by(fct_infreq(`Receiving Facility/Destination`)) |>
-                     count()
-CKL_destination_n
+CKL |> 
+  group_by(fct_infreq(`Receiving Facility/Destination`)) |>
+  count()
 ```
 
 ## Age

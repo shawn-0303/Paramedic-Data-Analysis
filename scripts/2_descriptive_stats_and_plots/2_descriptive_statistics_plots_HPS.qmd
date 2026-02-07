@@ -13,8 +13,6 @@ library(tidyverse)
 library(ggplot2)
 library(forcats)
 library(here)
-library(vcd)
-library(RColorBrewer)
 ```
 
 # Load Cleaned Dataset
