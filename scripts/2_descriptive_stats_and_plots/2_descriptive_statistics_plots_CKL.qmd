@@ -1,7 +1,6 @@
 ---
 title: "Descriptive Statistic Plots - CKL"
 format: pdf
-editor: visual
 ---
 
 # Load Packages
@@ -47,7 +46,7 @@ CKL_pickup_plot <- CKL |>
                                                     hjust = 1)) 
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_pickup_plot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "CKL_pickup_plot.png"),
        width = 11,
        height = 5)
 
@@ -79,7 +78,7 @@ CKL_destination_plot <- ggplot(CKL,
                                                     hjust = 1)) 
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_destination_plot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "CKL_destination_plot.png"),
        width = 9,
        height = 5)
 
@@ -108,7 +107,7 @@ CKL_age_plot <- CKL |>
                      y = "Percentage of Calls")
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_age_plot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "CKL_age_plot.png"),
        width = 7,
        height = 5)
 
@@ -139,7 +138,7 @@ CKL_gender_plot <- CKL |>
                         x = "Gender")
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_gender_plot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "CKL_gender_plot.png"),
        width = 7,
        height = 5)
 
@@ -166,7 +165,7 @@ CKL_age_gender_plot <- CKL |>
                        labs(title = "CKL Drug Toxicity Calls - Age and Gender")
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_age_gender_plot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "CKL_age_gender_plot.png"),
        width = 7,
        height = 5)
 
@@ -226,7 +225,7 @@ CKL_call_per_year_barplot <- ggplot(CKL_call_counts_yearly,
 CKL_call_per_year_barplot
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_calls_peryear_barplot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "CKL_calls_peryear_barplot.png"),
        width = 9,
        height = 5)
 
@@ -245,7 +244,7 @@ CKL_call_per_year_lineplot <- ggplot(CKL_call_counts_yearly,
 CKL_call_per_year_lineplot
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_calls_peryear_lineplot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "CKL_calls_peryear_lineplot.png"),
        width = 9,
        height = 5)
 ```
@@ -270,7 +269,7 @@ CKL_call_per_month_barplot <- ggplot(CKL_call_counts_monthly,
 CKL_call_per_month_barplot
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_calls_permonth_barplot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "CKL_calls_permonth_barplot.png"),
        width = 11,
        height = 5)
 
@@ -291,7 +290,7 @@ CKL_call_per_month_lineplot <- ggplot(CKL_call_counts_monthly,
 CKL_call_per_month_lineplot # This plot is hard to read so will not be used
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_calls_permonth_lineplot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "CKL_calls_permonth_lineplot.png"),
        width = 9,
        height = 5)
 ```
@@ -316,7 +315,7 @@ CKL_call_per_year_crude_plot <- ggplot(CKL_call_counts_yearly,
 CKL_call_per_year_crude_plot
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_calls_peryear_standardized_plot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "CKL_calls_peryear_standardized_plot.png"),
        width = 9,
        height = 5)
 ```
@@ -342,7 +341,7 @@ CKL_call_per_month_crude_plot <- ggplot(CKL_call_counts_monthly,
 CKL_call_per_month_crude_plot
 
 # Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_CKL/CKL_calls_permonth_standardized_plot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "CKL_calls_permonth_standardized_plot.png"),
        width = 9,
        height = 5)
 ```
