@@ -49,12 +49,13 @@ CKL_call_counts_monthly_w_Intervention <- CKL_full_months |>
                                           mutate(Num_Calls = replace_na(Num_Calls, 0),
                                                  Time_Point = row_number(),
                                                  
-                                                 # Intervention = 0 No
-                                                 Intervention = is.factor(if_else(Call_Month < COVID_StateofEmergency_Date, 0, 1)),
+                                                 # Intervention 
+                                                 Intervention = if_else(Call_Month < COVID_StateofEmergency_Date, 0L, 1L),
+                                                 Intervention = factor(Intervention, levels = c(0,1)),
                                                  
                                                  # Calculate the # of months post intervention
-                                                 Post_Intervention = if_else(Intervention == 1,
-                                                                             Time_Point - min(Time_Point[Intervention == 1]) + 1,0)) |>
+                                                 Post_Intervention = if_else(Intervention == 1L,
+                                                                             Time_Point - min(Time_Point[Intervention == 1L]) + 1L,0L)) |>
                                           select(Time_Point, everything())
 ```
 
@@ -161,7 +162,7 @@ ts.plot(CKL_DailyCallCount.ts)
 ## Daily ITS - Simple Moving Average
 
 ```{r}
-CKL_DailyCallCount.sma <- SMA(CKL_DailyCallCount.ts, n =14)
+CKL_DailyCallCount.sma <- sma(CKL_DailyCallCount.ts, n =14)
 CKL_DailyCallCount.sma
 
 plot.ts(CKL_DailyCallCount.sma)

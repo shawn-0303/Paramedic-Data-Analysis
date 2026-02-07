@@ -1,7 +1,6 @@
 ---
 title: "Process and Clean - HPS"
 format: pdf
-editor: visual
 ---
 
 # Load Raw Data and Packages
@@ -91,6 +90,22 @@ HPS$`Receiving Facility/Destination`[is.na(HPS$`Receiving Facility/Destination`)
 
 # Change Other label in pick-up location
 HPS$PickupLocationDescription[HPS$PickupLocationDescription == "Other (Describe in Remarks)"] <- "Other"
+```
+
+# Create Age Group Column
+
+```{r}
+#| label: age_groups
+
+HPS <- HPS |> mutate(Age_Groups = case_when(Age <= 13 ~ "0-13",
+                                             Age >= 14 & Age <= 18 ~ "14-18",
+                                             Age >= 19 & Age <= 24 ~ "19-24",
+                                             Age >= 25 & Age <= 44 ~ "25-44",
+                                             Age >= 45 & Age <= 65 ~ "45-65",
+                                             Age >= 65 ~ "65+"))
+
+                # Age groups are based on different levels of assumed risk 
+                 
 ```
 
 # Save Cleaned Data

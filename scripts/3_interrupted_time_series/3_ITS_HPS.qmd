@@ -50,7 +50,8 @@ HPS_call_counts_monthly_w_Intervention <- HPS_full_months |>
                                                  Time_Point = row_number(),
                                                  
                                                  # No Intervention = 0 ; Intervention = 1
-                                                 Intervention = as.factor(if_else(Call_Month < COVID_StateofEmergency_Date, 0, 1)),
+                                                 Intervention = if_else(Call_Month < COVID_StateofEmergency_Date, 0L, 1L),
+                                                 Intervention = factor(Intervention, levels = c(0,1)),
                                                  
                                                  # Calculate the # of months post intervention
                                                  Post_Intervention = if_else(Intervention == 1,
@@ -161,10 +162,8 @@ ts.plot(HPS_DailyCallCount.ts)
 ## Daily ITS - Simple Moving Average
 
 ```{r}
-HPS_DailyCallCount.sma <- SMA(HPS_DailyCallCount.ts, n =14)
+HPS_DailyCallCount.sma <- sma(HPS_DailyCallCount.ts, n =14)
 HPS_DailyCallCount.sma
-
-plot.ts(HPS_DailyCallCount.sma)
 ```
 
 

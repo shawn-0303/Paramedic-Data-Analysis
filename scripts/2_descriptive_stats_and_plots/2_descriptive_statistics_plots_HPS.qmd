@@ -1,7 +1,6 @@
 ---
 title: "Descriptive Statistic Plots - HPS"
 format: pdf
-editor: visual
 ---
 
 # Load Packages
@@ -52,8 +51,7 @@ HPS_pickup_plot <- ggplot(HPS,
                        y = "Percent of Calls",
                        x = "Pick-Up Location/Sending Facility")
 
-# Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_HPS/HPS_pickup_plot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "HPS_pickup_plot.png"),
        width = 8,
        height = 5)
 
@@ -82,8 +80,7 @@ HPS_destination_plot <- ggplot(HPS,
                        y = "Percent of Calls",
                        x = "Destination/Recieving Facility")
 
-# Save the plot as a .png in a separate folder
-ggsave(file = "/home2/wburr/Shawn_Research/scripts/2_descriptive_stats_and_plots/2_descriptive_statistic_plots_HPS/HPS_destination_plot.png",
+ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_HPS", "HPS_destination_plot.png"),
        width = 8,
        height = 5)
 

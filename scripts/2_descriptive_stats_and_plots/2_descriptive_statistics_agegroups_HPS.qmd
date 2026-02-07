@@ -1,5 +1,5 @@
 ---
-title: "Descriptive Statistics - HPS"
+title: "Descriptive Statistic with Age Groups - HPS"
 format: pdf
 ---
 
@@ -23,7 +23,7 @@ library(here)
 load(here("data", "HPS.rda"))
 ```
 
-# Descriptive Statistics
+# Descriptive Statistics (by Age Group)
 
 ## Pick-Up Location / Sending Facility
 
@@ -31,8 +31,8 @@ load(here("data", "HPS.rda"))
 #| label: describe_pickups
 
 # Make a list of all pick up locations by decreasing frequency
-HPS |> 
-  group_by(fct_infreq(PickupLocationDescription)) |>
+HPS |>
+  group_by(PickupLocationDescription, Age_Groups) |>
   count()
 ```
 
@@ -43,17 +43,8 @@ HPS |>
 
 # Make a list of all destinations by decreasing frequency
 HPS |> 
-  group_by(fct_infreq(`Receiving Facility/Destination`)) |>
+  group_by(`Receiving Facility/Destination`, Age_Groups) |>
   count()
-```
-
-## Age
-
-```{r}
-#| label: describe_age
-
-# Find the age range, mean, and median of patient ages
-HPS |> pull(Age) |> summary()
 ```
 
 ## Gender
@@ -62,7 +53,7 @@ HPS |> pull(Age) |> summary()
 #| label: describe_gender
 
 # Count the number of patients by Gender
-HPS |> group_by(Gender) |> count()
+HPS |> group_by(Age_Groups, Gender) |> count()
 ```
 
 ## Age + Gender
@@ -71,19 +62,17 @@ HPS |> group_by(Gender) |> count()
 #| label: describe_age_gender
 
 # Summarize patient age by gender 
-HPS |> group_by(Gender) |>
+HPS |> group_by(Gender, Age_Groups) |>
        summarise(count = n(),
                  mean_age = mean(Age),
                  median_age = median(Age),
                  min = min(Age),
-                 max = max(Age))  
+                 max = max(Age),
+                 .groups = "drop")  
 ```
 
-## Call Year
 
-```{r}
-#| label: describe_call_year
 
-HPS |> group_by(Call_Year) |>
-       count()
-```
+
+
+
