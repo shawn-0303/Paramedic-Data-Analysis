@@ -27,6 +27,9 @@ load(here("data", "HPS.rda"))
 ```{r}
 #| label: sankey_data_HPS
 
+HPS_sankey <- HPS |>
+  make_long(PickupLocationDescription, `Receiving Facility/Destination`)
+
 ggplot(HPS_sankey, aes(x = x, 
                        next_x = next_x, 
                        node = node, 
