@@ -1,7 +1,6 @@
 ---
 title: "Interrupted Time Series - HPS"
 format: pdf
-editor: visual
 ---
 
 # Load Packages
@@ -165,21 +164,3 @@ ts.plot(HPS_DailyCallCount.ts)
 HPS_DailyCallCount.sma <- sma(HPS_DailyCallCount.ts, n =14)
 HPS_DailyCallCount.sma
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
