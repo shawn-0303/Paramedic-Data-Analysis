@@ -2,8 +2,6 @@
 title: "Sankey Diagram - CKL"
 format: pdf
 ---
-
-
 # Load Packages
 
 ```{r}
@@ -23,10 +21,10 @@ library(ggsankey)
 load(here("data", "CKL.rda"))
 ```
 
-# Create Sankey Version of HPS 
+# Create Sankey Version of CKL 
 
 ```{r}
-#| label: sankey_data_HPS
+#| label: sankey_data_CKL
 #| warning: false
 
 CKL_sankey <- CKL |>
@@ -93,6 +91,116 @@ circos.track(track.index = 1, panel.fun = function(x, y) {
     circos.text(CELL_META$xcenter, 
                 CELL_META$ylim[1], 
                 CELL_META$sector.index, 
+                facing = "clockwise", 
+                niceFacing = TRUE, 
+                adj = c(0, 0.5),
+                cex = 0.6)
+}, bg.border = NA)
+
+circos.clear()
+
+```
+
+# Create Sankey Version of CKL Patient Flow Using Filtered Data 
+
+## Clean CKL Data for Sankey
+
+```{r}
+#| label: clean_sankey_data
+
+# Remove transfer patients 
+CKL_filtered <- CKL[!(CKL$PickupLocationDescription %in% "Hospital (Acute & Non-Acute)"), ]
+
+# Remove pick-up and drop-off locations with only one call
+CKL_filtered <- CKL_filtered |>
+                group_by(PickupLocationDescription) |>
+                filter(n() > 1) |>
+                ungroup() |>
+                group_by(`Receiving Facility/Destination`) |>
+                filter(n() > 1) |>
+                ungroup()
+```
+
+## Normal Sankey - Filtered
+
+```{r}
+#| label: sankey_data_CKL_filtered
+
+CKL_sankey_filtered <- CKL_filtered |>
+  make_long(PickupLocationDescription, `Receiving Facility/Destination`)
+
+ggplot(CKL_sankey_filtered, aes(x = x, 
+                       next_x = next_x, 
+                       node = node, 
+                       next_node = next_node, 
+                       fill = factor(node), 
+                       label = node)) +
+  geom_sankey(flow.alpha = 0.6,
+              width = 0.1) +
+  geom_sankey_label(size = 3, 
+                    color = "black", 
+                    fill = "white")+
+  scale_fill_viridis_d(option = "viridis",
+                       drop = FALSE) +
+  theme_sankey(base_size = 15) +
+  labs(x = NULL) +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = .5)) +
+  ggtitle("CKL Patient Flow")
+
+ggsave(file = here("scripts", "4_sankey_diagrams", "4_sankeys", "CKL_location_sankey_filtered.png"),
+       width = 7,
+       height = 8)
+
+```
+
+## Radial Sankey - Filtered
+
+```{r}
+library(circlize)
+
+png(filename = here("scripts", "4_sankey_diagrams", "4_sankeys", "CKL_location_radial_sankey_filtered.png"),
+    width = 10,
+    height = 9,
+    units = "in",
+    res = 300)
+
+circos.clear()
+
+CKL_sankey_radial_filtered <- CKL_filtered |>
+  select(PickupLocationDescription, `Receiving Facility/Destination`) |>
+  na.omit()
+
+sectors <- unique(c(CKL_sankey_radial_filtered$PickupLocationDescription,
+                    CKL_sankey_radial_filtered$`Receiving Facility/Destination`))
+
+wrap_width <- setNames(rep(40, length(sectors)),
+                      sectors)
+
+wrap_width["Ross Memorial Hospital"] <- 20
+wrap_width["Apartment/Condo. Building"] <- 10
+
+wrapped_labels <- setNames(
+  mapply(function(s, w) str_wrap(s, width = w), sectors, wrap_width),
+  sectors)
+
+grid.col = c("Coroner-East Region, Kingston Office" = "darkgrey", 
+             "Haliburton Hospital" = "darkgrey", 
+             "Lakeridge Health Bowmanville" = "darkgrey",
+             "Minden Hospital"= "darkgrey",
+             "Not Transported"= "darkgrey",
+             "Other" = "darkgrey",
+             "Peterborough Regional Health Centre" = "darkgrey",
+             "Ross Memorial Hospital" = "darkgrey")
+
+chordDiagram(CKL_sankey_radial_filtered, annotationTrack = "grid",
+             grid.col = grid.col,
+              preAllocateTracks = list(track.height = 0.18))
+
+circos.track(track.index = 1, panel.fun = function(x, y) {
+    circos.text(CELL_META$xcenter, 
+                CELL_META$ylim[1], 
+                wrapped_labels[CELL_META$sector.index], 
                 facing = "clockwise", 
                 niceFacing = TRUE, 
                 adj = c(0, 0.5),

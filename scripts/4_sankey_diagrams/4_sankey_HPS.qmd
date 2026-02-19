@@ -12,6 +12,7 @@ format: pdf
 library(here)
 library(lubridate)
 library(ggsankey)
+library(circlize)
 ```
 
 # Load Cleaned Dataset
@@ -22,7 +23,7 @@ library(ggsankey)
 load(here("data", "HPS.rda"))
 ```
 
-# Create Sankey Version of HPS 
+# Create Sankey Version of HPS Patient Flow
 
 ```{r}
 #| label: sankey_data_HPS
@@ -58,8 +59,6 @@ ggsave(file = here("scripts", "4_sankey_diagrams", "4_sankeys", "HPS_location_sa
 ## Radial Sankey
 
 ```{r}
-library(circlize)
-
 png(filename = here("scripts", "4_sankey_diagrams", "4_sankeys", "HPS_location_radial_sankey.png"),
     width = 8,
     height = 5,
@@ -97,7 +96,7 @@ grid.col = c("HHHS Minden Hospital" = "darkgrey",
              "House/Town House" = "green", 
              "Hospital (Acute & Non-Acute)" = "blue",
              "Other" = "purple",
-             "Street/Highway/Road" = "brown")
+             "Street/Highway/Road" = "pink")
 
 chordDiagram(HPS_sankey_radial, annotationTrack = "grid",
              grid.col = grid.col,
@@ -117,7 +116,111 @@ circos.clear()
 
 ```
 
+# Create Sankey Version of HPS Patient Flow Using Filtered Data 
 
+## Clean HPS Data for Sankey
+
+```{r}
+#| label: clean_sankey_data
+
+# Remove transfer patients 
+HPS_filtered <- HPS[!(HPS$PickupLocationDescription %in% "Hospital (Acute & Non-Acute)"), ]
+
+# Remove pick-up locations with only one call
+HPS_filtered <- HPS_filtered[HPS_filtered$PickupLocationDescription >= 1,]
+```
+
+## Normal Sankey - Filtered
+
+```{r}
+#| label: sankey_data_HPS_filtered
+
+HPS_sankey_filtered <- HPS_filtered |>
+  make_long(PickupLocationDescription, `Receiving Facility/Destination`)
+
+ggplot(HPS_sankey_filtered, aes(x = x, 
+                       next_x = next_x, 
+                       node = node, 
+                       next_node = next_node, 
+                       fill = factor(node), 
+                       label = node)) +
+  geom_sankey(flow.alpha = 0.6,
+              width = 0.1) +
+  geom_sankey_label(size = 3, 
+                    color = "black", 
+                    fill = "white")+
+  scale_fill_viridis_d(option = "viridis",
+                       drop = FALSE) +
+  theme_sankey(base_size = 15) +
+  labs(x = NULL) +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = .5)) +
+  ggtitle("HPS Patient Flow")
+
+ggsave(file = here("scripts", "4_sankey_diagrams", "4_sankeys", "HPS_location_sankey_filtered.png"),
+       width = 8,
+       height = 5)
+
+```
+
+## Radial Sankey - Filtered
+
+```{r}
+png(filename = here("scripts", "4_sankey_diagrams", "4_sankeys", "HPS_location_radial_sankey_filtered.png"),
+    width = 8,
+    height = 5,
+    units = "in",
+    res = 300)
+
+circos.clear()
+
+HPS_sankey_radial_filtered <- HPS_filtered |>
+  select(PickupLocationDescription, `Receiving Facility/Destination`)
+
+sectors <- unique(c(HPS_sankey_radial_filtered$PickupLocationDescription,
+                    HPS_sankey_radial_filtered$`Receiving Facility/Destination`))
+
+wrap_width <- setNames(rep(10, length(sectors)),
+                      sectors)
+
+wrap_width["QHC North Hastings - Bancroft"] <- 40
+wrap_width["Ross Memorial Hospital"] <- 25
+wrap_width["Huntsville District Memorial Hosp"] <- 40
+
+wrapped_labels <- setNames(
+  mapply(function(s, w) str_wrap(s, width = w), sectors, wrap_width),
+  sectors)
+
+grid.col = c("HHHS Minden Hospital" = "darkgrey", 
+             "Ross Memorial Hospital" = "darkgrey", 
+             "Haliburton Hospital" = "darkgrey",
+             "Not Transported" = "darkgrey", 
+             "QHC North Hastings - Bancroft" = "darkgrey", 
+             "Peterborough Regional Health Centre"= "darkgrey",
+             "Huntsville District Memorial Hosp" = "darkgrey",
+             "Long-Term Care Home" = "red",
+             "Apartment/Condo. Building" = "orange",
+             "House/Town House" = "green", 
+             "Other" = "blue",
+             "Street/Highway/Road" = "purple")
+
+chordDiagram(HPS_sankey_radial_filtered, annotationTrack = "grid",
+             grid.col = grid.col,
+              preAllocateTracks = list(track.height = 0.18))
+
+circos.track(track.index = 1, panel.fun = function(x, y) {
+    circos.text(CELL_META$xcenter, 
+                CELL_META$ylim[1], 
+                wrapped_labels[CELL_META$sector.index], 
+                facing = "clockwise", 
+                niceFacing = TRUE, 
+                adj = c(0, 0.5),
+                cex = 0.6)
+}, bg.border = NA)
+
+circos.clear()
+
+```
 
 
 
