@@ -133,7 +133,7 @@ png(filename = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_s
 
 agegroup_gender_mosaic <- mosaic(~ Gender + Age_Groups, data = HPS,
                            highlighting = "Age_Groups",
-                           highlighting_fill=brewer.pal(5, "Accent"),
+                           highlighting_fill=brewer.pal(6, "Accent")[2:6],
                            gp_labels = gpar(fontsize = 10),
                            labeling_args = list(set_varnames = list(Age_Groups = "Age Groups",
                                                                     Gender = "Gender")))
