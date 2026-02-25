@@ -143,6 +143,9 @@ agegroup_gender_mosaic <- mosaic(~ Gender + Age_Groups, data = CKL,
 dev.off()
 ```
 
+## Age and Gender Stacked bar Plot 
+
+
 # Plotting Descriptive Statistics (Yearly and Monthly Call Counts)
 
 ## Calls per Year

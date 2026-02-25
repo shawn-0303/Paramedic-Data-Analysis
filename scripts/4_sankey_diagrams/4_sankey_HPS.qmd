@@ -155,7 +155,8 @@ ggplot(HPS_sankey_filtered, aes(x = x,
   labs(x = NULL) +
   theme(legend.position = "none",
         plot.title = element_text(hjust = .5)) +
-  ggtitle("HPS Patient Flow")
+  ggtitle("HPS Patient Flow") +
+  scale_x_discrete(labels = c("Pick-Up Location", "Recieving Facility / Destination"))
 
 ggsave(file = here("scripts", "4_sankey_diagrams", "4_sankeys", "HPS_location_sankey_filtered.png"),
        width = 8,

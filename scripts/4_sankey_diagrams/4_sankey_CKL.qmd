@@ -210,3 +210,52 @@ circos.track(track.index = 1, panel.fun = function(x, y) {
 circos.clear()
 
 ```
+
+# Group Sankey Data to Minimize categories 
+
+```{r}
+CKL_sankey_grouped <- CKL_filtered |>
+                      select(PickupLocationDescription, `Receiving Facility/Destination`) |>
+                      mutate(Grouped_pickups = case_when(
+                              PickupLocationDescription == "House/Town House" ~ PickupLocationDescription,
+                              PickupLocationDescription == "Apartment/Condo. Building" ~ PickupLocationDescription,
+                              PickupLocationDescription == "Street/Highway/Road" ~ PickupLocationDescription,
+                              PickupLocationDescription == "Long-Term Care Home" ~ PickupLocationDescription,
+                              TRUE ~ "Other"))
+```
+
+
+## Normal Sankey - Grouped and Filtered
+
+```{r}
+#| label: sankey_data_CKL_grouped_filtered
+
+CKL_sankey_grouped <- CKL_sankey_grouped |>
+  make_long(Grouped_pickups, `Receiving Facility/Destination`)
+
+ggplot(CKL_sankey_grouped, aes(x = x, 
+                       next_x = next_x, 
+                       node = node, 
+                       next_node = next_node, 
+                       fill = factor(node), 
+                       label = node)) +
+  geom_sankey(flow.alpha = 0.6,
+              width = 0.1) +
+  geom_sankey_label(size = 3, 
+                    color = "black", 
+                    fill = "white")+
+  scale_fill_viridis_d(option = "viridis",
+                       drop = FALSE) +
+  theme_sankey(base_size = 15) +
+  labs(x = NULL) +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = .5)) +
+  ggtitle("CKL Patient Flow") + 
+  scale_x_discrete(labels = c("Pick-Up Location", "Recieving Facility / Destination"))
+
+ggsave(file = here("scripts", "4_sankey_diagrams", "4_sankeys", "CKL_location_sankey_grouped_filtered.png"),
+       width = 8,
+       height = 6)
+
+```
+
