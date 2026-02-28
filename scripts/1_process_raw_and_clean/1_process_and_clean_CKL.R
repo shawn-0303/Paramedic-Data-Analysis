@@ -1,44 +1,22 @@
----
-title: "Process and Clean - CKL"
-format: pdf
----
-
-# Load Raw Data and Packages
-
-```{r}
-#| label: load
-#| message: false
-
 library(dplyr)
 library(tidyverse)
 library(here)
 
 load(here("data", "raw_data", "raw_CKL.rda"))
-```
 
 # Format Date + Time
-
-```{r}
-#| label: format_date
-
 # format CallReceivedDateTime column as date and time
 raw_CKL$CallReceivedDateTime <- as.POSIXlt(raw_CKL$CallReceivedDateTime,
-                                format = "%Y-%m-%d %H:%M:%S")
+                                           format = "%Y-%m-%d %H:%M:%S")
 
 # separate call date/time into their own columns
 CKL <- raw_CKL |> extract(CallReceivedDateTime, into = c("Call_Date", "Call_Time"), "(\\S+)\\s*(.*)") |>
-  
-                  # separate the call year, month, and day into separate columns
-                  mutate(Call_Date = as.Date(Call_Date),
-                         Call_Year = as.factor(year(Call_Date)),
-                         Call_Month = as.factor(month(Call_Date)),
-                         Call_Day = as.factor(day(Call_Date)))
-```
 
-# Calculate proportion of calls by gender
-
-```{r}
-#| label: by_gender
+  # separate the call year, month, and day into separate columns
+  mutate(Call_Date = as.Date(Call_Date),
+         Call_Year = as.factor(year(Call_Date)),
+         Call_Month = as.factor(month(Call_Date)),
+         Call_Day = as.factor(day(Call_Date)))
 
 # Count number of calls from each gender
 n_CKL <- nrow(CKL)
@@ -50,14 +28,8 @@ n_CKL_X <- length(which(CKL$Gender == "X"))
 prop_CKL_F <- n_CKL_F / n_CKL # 0.4339
 prop_CKL_M <- n_CKL_M / n_CKL # 0.5533
 prop_CKL_X <- n_CKL_X / n_CKL # 0.0009 # Only 1 patient; Can remove
-```
 
-# Data Missingness
-
-```{r}
-#| label: data_missingness
-
-# Identify what data is missing 
+# Identify what data is missing
 n_CKL_missing_age <- length(which(is.na(CKL$Age))) # 12
 n_CKL_missing_gender <- length(which(is.na(CKL$Gender))) # 13
 n_CKL_missing_calldate <- length(which(is.na(CKL$Call_Date))) # 0
@@ -65,9 +37,7 @@ n_CKL_missing_calltime <- length(which(is.na(CKL$Call_Time))) # 0
 n_CKL_missing_PickUpLocation <- length(which(is.na(CKL$PickupLocationDescription))) # 1
 n_CKL_missing_destination <- length(which(is.na(CKL$`Receiving Facility/Destination`))) # 165 - Possible data missing due to no further action by paramedics
 
-# Missing age, gender, pick-up location, and destination data
-
-# Calculate percentage of data missing 
+# Calculate percentage of data missing
 prop_CKL_missing_age <- (n_CKL_missing_age / n_CKL) * 100 # 1.094%
 prop_CKL_missing_PickUpLocation <- (n_CKL_missing_PickUpLocation / n_CKL) * 100 # 0.091%
 prop_CKL_missing_gender <- (n_CKL_missing_gender / n_CKL) * 100 # 1.185%
@@ -85,78 +55,41 @@ CKL_missingness <- data.frame(n = n_CKL,
                               `Destination (%)` = prop_CKL_missing_destination,
                               row.names = "CKL")
 
-CKL_missingness
-```
-
 # Data Cleaning
-
 ## Age - Change Month Age Unit to Year
-
-```{r}
-#| label: change_ageunit
-
-CKL <- CKL |> 
-      # Change the row with age "8 Months" to its equivalent in Years
-       mutate(Age = if_else(AgeUnit == "mths", round(Age / 12, 2), Age),
-              # Change the label for that row to match 
-              AgeUnit = if_else(AgeUnit == "mths", "yrs", AgeUnit))
-```
+CKL <- CKL |>
+  # Change the row with age "8 Months" to its equivalent in Years
+  mutate(Age = if_else(AgeUnit == "mths", round(Age / 12, 2), Age),
+         # Change the label for that row to match
+         AgeUnit = if_else(AgeUnit == "mths", "yrs", AgeUnit))
 
 ## Age - Fix Outlier
-
-```{r}
-#| label: fix_outlier
-
-# The date was calculated using 1902 instead of 2002, resulting in an outlier of a 123-year-old patient
-
+### The date was calculated using 1902 instead of 2002, resulting in an outlier of a 123-year-old patient
 CKL[CKL$`Call Number/Patient Number` == 4651024, "Age"] <- 2025 - 2002
-```
 
 ## Gender - Remove the one case where Gender = "X"
-
-```{r}
-#| label: remove_gender_X
-
-# Remove the one patient with Gender "X"
 CKL <- CKL[-which(CKL$Gender == "X"),]
-```
 
 ## Change Column Values After Discussion with Paramedic
-
-```{r}
-#| label: change_column_values
-
-# Missing Destination data (NA) to "Patient Not Transported"
+### Missing Destination data (NA) to "Patient Not Transported"
 CKL$`Receiving Facility/Destination`[is.na(CKL$`Receiving Facility/Destination`)] <- "Not Transported"
 
-# Change Other Label in destination
+###  Change Other Label in destination
 CKL$`Receiving Facility/Destination`[CKL$`Receiving Facility/Destination` == "See remarks section for address"] <- "Other"
 
-# Change Other label in pickup location
+###  Change Other label in pickup location
 CKL$PickupLocationDescription[CKL$PickupLocationDescription == "Other (Describe in Remarks)"] <- "Other"
-```
 
 # Create Age Group Column
-
-```{r}
-#| label: age_groups
-
+### Age groups are based on different levels of assumed risk
 CKL <- CKL |> mutate(Age_Groups = case_when(Age <= 13 ~ "0-13",
-                                             Age >= 14 & Age <= 18 ~ "14-18",
-                                             Age >= 19 & Age <= 24 ~ "19-24",
-                                             Age >= 25 & Age <= 44 ~ "25-44",
-                                             Age >= 45 & Age <= 65 ~ "45-65",
-                                             Age >= 65 ~ "65+"))
-
-                # Age groups are based on different levels of assumed risk 
-                 
-```
+                                            Age >= 14 & Age <= 18 ~ "14-18",
+                                            Age >= 19 & Age <= 24 ~ "19-24",
+                                            Age >= 25 & Age <= 44 ~ "25-44",
+                                            Age >= 45 & Age <= 65 ~ "45-65",
+                                            Age >= 65 ~ "65+"))
 
 # Save Cleaned Data
-
-```{r}
-#| label: save_CKL
-
 save(CKL,
      file = here("data", "CKL.rda"))
-```
+

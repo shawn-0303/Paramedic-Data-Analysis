@@ -1,44 +1,22 @@
----
-title: "Process and Clean - HPS"
-format: pdf
----
-
-# Load Raw Data and Packages
-
-```{r}
-#| label: load
-#| message: false
-
 library(dplyr)
 library(tidyverse)
 library(here)
 
 load(here("data", "raw_data", "raw_HPS.rda"))
-```
 
 # Format Date + Time
-
-```{r}
-#| label: format_date
-
 # format CallReceivedDateTime column as date and time
 raw_HPS$CallReceivedDateTime <- as.POSIXlt(raw_HPS$CallReceivedDateTime,
-                                format = "%Y-%m-%d %H:%M:%S")
+                                           format = "%Y-%m-%d %H:%M:%S")
 
 # separate call date/time into their own columns
 HPS <- raw_HPS |> extract(CallReceivedDateTime, into = c("Call_Date", "Call_Time"), "(\\S+)\\s*(.*)") |>
-  
-                  # separate the call year, month, and day into separate columns
-                  mutate(Call_Date = as.Date(Call_Date),
-                         Call_Year = as.factor(year(Call_Date)),
-                         Call_Month = as.factor(month(Call_Date)),
-                         Call_Day = as.factor(day(Call_Date)))
-```
 
-# Calculate proportion of calls by gender
-
-```{r}
-#| label: by_gender
+  # separate the call year, month, and day into separate columns
+  mutate(Call_Date = as.Date(Call_Date),
+         Call_Year = as.factor(year(Call_Date)),
+         Call_Month = as.factor(month(Call_Date)),
+         Call_Day = as.factor(day(Call_Date)))
 
 # Count number of calls from each gender
 n_HPS <- nrow(HPS)
@@ -52,67 +30,48 @@ prop_HPS_F <- n_HPS_F / n_HPS # 0.5349
 prop_HPS_M <- n_HPS_M / n_HPS # 0.4651 #We only have F and M in this data set
 prop_HPS_X <- n_HPS_X / n_HPS # 0
 prop_HPS_gender_NA <- n_HPS_gender_NA / n_HPS # 0
-```
 
-# Data Missingness
-
-```{r}
-#| label: data_missingness
-
-# Identify what data is missing 
+# Identify what data is missing
 n_HPS_missing_age <- length(which(is.na(HPS$Age))) # 0
 n_HPS_missing_calldate <- length(which(is.na(HPS$Call_Date))) # 0
 n_HPS_missing_calltime <- length(which(is.na(HPS$Call_Time))) # 0
 n_HPS_missing_PickUpLocation <- length(which(is.na(HPS$PickupLocationDescription))) # 0
 n_HPS_missing_Destination <- length(which(is.na(HPS$`Receiving Facility/Destination`))) # 3 - Possible data missing due to no further action by paramedics
 
-# Missing age, gender, pick-up location, and destination data
-
-# Calculate percentage of data missing 
+# Calculate percentage of data missing
 prop_HPS_missing_destination <- (n_HPS_missing_Destination / n_HPS) * 100 # 6.977%
 
-# Summarize CKL data missingness in a data frame
+# Summarize HPS data missingness in a data frame
 HPS_missingness <- data.frame(n = n_HPS,
                               Destination = n_HPS_missing_Destination,
                               `Destination (%)` = prop_HPS_missing_destination,
                               row.names = "HPS")
 
-HPS_missingness
-```
-
 # Change Column Values After Discussion With Paramedic
-
-```{r}
-#| label: change_column_values
-
-# Missing Destination data (NA) to "Patient Not Transported"
+## Missing Destination data (NA) to "Patient Not Transported"
 HPS$`Receiving Facility/Destination`[is.na(HPS$`Receiving Facility/Destination`)] <- "Not Transported"
 
-# Change Other label in pick-up location
+##  Change Other label in pick-up location
 HPS$PickupLocationDescription[HPS$PickupLocationDescription == "Other (Describe in Remarks)"] <- "Other"
-```
 
 # Create Age Group Column
-
-```{r}
-#| label: age_groups
-
+## Age groups are based on different levels of assumed risk
 HPS <- HPS |> mutate(Age_Groups = case_when(Age <= 13 ~ "0-13",
-                                             Age >= 14 & Age <= 18 ~ "14-18",
-                                             Age >= 19 & Age <= 24 ~ "19-24",
-                                             Age >= 25 & Age <= 44 ~ "25-44",
-                                             Age >= 45 & Age <= 65 ~ "45-65",
-                                             Age >= 65 ~ "65+"))
-
-                # Age groups are based on different levels of assumed risk 
-                 
-```
+                                            Age >= 14 & Age <= 18 ~ "14-18",
+                                            Age >= 19 & Age <= 24 ~ "19-24",
+                                            Age >= 25 & Age <= 44 ~ "25-44",
+                                            Age >= 45 & Age <= 65 ~ "45-65",
+                                            Age >= 65 ~ "65+"))
 
 # Save Cleaned Data
-
-```{r}
-#| label: save_HPS
-
 save(HPS,
      file = here("data", "HPS.rda"))
-```
+
+
+
+
+
+
+
+
+
