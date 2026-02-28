@@ -15,6 +15,7 @@ combined_data <- bind_rows("City of Kawartha Lakes (n = 1080) " = CKL,
                  select(Source, Gender, Age_Groups) |>
                  filter(!is.na(Age_Groups) & !is.na(Gender))
 
+# Age and Gender comparisons
 Age_Gender_plot <- ggplot(combined_data,
                           aes(x = Gender,
                               fill = Age_Groups)) +
@@ -25,7 +26,7 @@ Age_Gender_plot <- ggplot(combined_data,
                      limits = c(0, 0.6),
                      breaks = seq(0, 1, 0.1)) +
   scale_x_discrete(label = c("Female", "Male")) +
-  scale_fill_viridis_d(option = "A") +
+  scale_fill_viridis_d(option = "H") +
   labs(title = "Percentage of Calls by Paramedic Service, Gender, and Age Group",
        y = "Percentage of Calls",
        x = "Gender",
@@ -34,12 +35,6 @@ Age_Gender_plot <- ggplot(combined_data,
 Age_Gender_plot
 
 
-# Save the plot as a .png in a separate folder
 ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_combined", "gender_w_agegroup_combined_plot.png"),
        width = 8,
        height = 5)
-
-
-# Print the plot
-CKL_age_group_gender_plot
-```
