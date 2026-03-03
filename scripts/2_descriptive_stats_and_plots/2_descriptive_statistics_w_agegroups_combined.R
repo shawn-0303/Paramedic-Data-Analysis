@@ -15,9 +15,9 @@ load(here("data", "PCCP_Chris.rda"))
 PCCP_Chris <- PCCP_Chris |> mutate(across(c(TransportID, PrimaryProblemCode, SecondaryProblemCode, OtherSecondaryProblemCode), as.character))
 
 # Make a combined dataset for comparison
-combined_data <- bind_rows("City of Kawartha Lakes (n = 1080) " = CKL,
-                           "Haliburton (n = 43)" = HPS,
-                           "Peterborough (2016-2020) (n = 806)" = PCCP_Chris,
+combined_data <- bind_rows("City of Kawartha Lakes (2016-2025) \n(n = 1080) " = CKL,
+                           "Haliburton (2016-2025) \n(n = 43)" = HPS,
+                           "Peterborough (2016-2020) \n(n = 806)" = PCCP_Chris,
                            .id = "Source") |>
                  select(Source, Gender, Age_Groups) |>
                  filter(!is.na(Age_Groups) & !is.na(Gender))
@@ -43,5 +43,5 @@ Age_Gender_plot
 
 
 ggsave(file = here("scripts", "2_descriptive_stats_and_plots", "2_descriptive_statistic_plots_combined", "gender_w_agegroup_combined_plot.png"),
-       width = 8,
+       width = 8.5,
        height = 5)
